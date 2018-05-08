@@ -940,6 +940,7 @@ bool Core::addTransactionToPool(CachedTransaction&& cachedTransaction) {
   }
 
   auto transactionHash = cachedTransaction.getTransactionHash();
+
   if (!transactionPool->pushTransaction(std::move(cachedTransaction), std::move(validatorState))) {
     logger(Logging::DEBUGGING) << "Failed to push transaction " << transactionHash << " to pool, already exists";
     return false;
@@ -950,6 +951,44 @@ bool Core::addTransactionToPool(CachedTransaction&& cachedTransaction) {
 }
 
 bool Core::isTransactionValidForPool(const CachedTransaction& cachedTransaction, TransactionValidatorState& validatorState) {
+  uint64_t mixin = 0;
+
+  auto tx = createTransaction(cachedTransaction.getTransaction());
+
+  for (size_t i = 0; i < tx->getInputCount(); ++i) {
+    if (tx->getInputType(i) != TransactionTypes::InputType::Key) {
+      continue;
+    }
+
+    KeyInput input;
+    tx->getInput(i, input);
+    uint64_t currentMixin = input.outputIndexes.size();
+    if (currentMixin > mixin) {
+        mixin = currentMixin;
+    }
+  }
+
+  /* Note that the mixin calculated here is one more than the mixin you input
+     in your transaction. This is checking the number of outputs, for example,
+     5, where yours is one of them. Mixin 4 = mix my output with 4 others,
+     so 5 outputs. So, we add one here. */
+  uint64_t minMixin = CryptoNote::parameters::MINIMUM_MIXIN + 1;
+  uint64_t maxMixin = CryptoNote::parameters::MAXIMUM_MIXIN + 1;
+
+  if (mixin > maxMixin) {
+    logger(Logging::DEBUGGING) << "Transaction " << cachedTransaction.getTransactionHash()
+      << " is not valid. Reason: transaction mixin is too large (" << mixin
+      << "). Maximum mixin allowed is " << maxMixin;
+
+    return false;
+  } else if (mixin < minMixin) {
+    logger(Logging::DEBUGGING) << "Transaction " << cachedTransaction.getTransactionHash()
+      << " is not valid. Reason: transaction mixin is too small (" << mixin
+      << "). Minimum mixin allowed is " << minMixin;
+
+    return false;
+  }
+
   uint64_t fee;
 
   if (auto validationResult = validateTransaction(cachedTransaction, validatorState, chainsLeaves[0], fee, getTopBlockIndex())) {
