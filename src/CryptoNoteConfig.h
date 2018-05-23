@@ -106,7 +106,10 @@ const char     P2P_NET_DATA_FILENAME[]                       = "p2pstate.bin";
 const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json";
 } // parameters
 
-const char     CRYPTONOTE_NAME[]                             = "TurtleCoin";
+// give your testnet a name, impacts the the data dir name so avoid existing testnets and mainnet
+// mainnet: TurtleCoin
+// vico-7xT: Vico
+const char     CRYPTONOTE_NAME[]                             = "";
 
 const uint8_t  TRANSACTION_VERSION_1                         =  1;
 const uint8_t  TRANSACTION_VERSION_2                         =  2;
@@ -140,15 +143,9 @@ const uint64_t P2P_DEFAULT_INVOKE_TIMEOUT                    = 60 * 2 * 1000; //
 const size_t   P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT          = 5000;          // 5 seconds
 const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 
+// You'll need seed nodes put some in here
 const char* const SEED_NODES[] = {
-  "46.101.132.184:11897",
-  "163.172.147.52:11897",
-  "51.15.138.214:11897",
-  "51.15.137.77:11897",
-  "174.138.68.141:11897", //^ rock
-  "145.239.88.119:11999", //cision
-  "142.44.242.106:11897", //tom
-  "165.227.252.132:11897" //iburnmycd
+  //"ip:port", < it's an array so figure out the comma
 };
 } // CryptoNote
 
