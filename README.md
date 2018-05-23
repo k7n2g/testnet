@@ -11,5 +11,6 @@ Note that there are missing params that need to be filled in, this is on purpose
 ## Current Live Testnets
 
 - [vico-7xT](https://github.com/turtlecoin/testnet/tree/vico-7xT)
+- [main-clone](https://github.com/turtlecoin/testnet/tree/main-clone)
 
 ## Previous Testnets
