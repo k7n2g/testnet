@@ -30,13 +30,12 @@ const size_t   CRYPTONOTE_MAX_BLOCK_BLOB_SIZE                = 500000000;
 const size_t   CRYPTONOTE_MAX_TX_SIZE                        = 1000000000;
 const uint64_t CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX       = 3914525;
 const uint32_t CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW          = 40;
-const uint64_t CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT            = 60 * 60 * 2;
 
 const size_t   BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW             = 60;
 
 // MONEY_SUPPLY - total number coins to be generated
 const uint64_t MONEY_SUPPLY                                  = UINT64_C(100000000000000);
-const uint32_t ZAWY_DIFFICULTY_BLOCK_INDEX                   = 187000;
+const uint32_t ZAWY_DIFFICULTY_BLOCK_INDEX                   = 20;
 const size_t ZAWY_DIFFICULTY_V2                              = 0;
 const uint8_t ZAWY_DIFFICULTY_DIFFICULTY_BLOCK_VERSION       = 3;
 const unsigned EMISSION_SPEED_FACTOR                         = 25;
@@ -58,7 +57,7 @@ const uint16_t DEFAULT_MIXIN                                 = 5;
 const uint16_t MINIMUM_MIXIN_NO_DUST                         = 3;
 const uint16_t MINIMUM_MIXIN_V1                              = 0;
 const uint16_t MAXIMUM_MIXIN_V1                              = 100;
-const uint32_t MIXIN_LIMITS_V1_HEIGHT                        = 440000;
+const uint32_t MIXIN_LIMITS_V1_HEIGHT                        = 18000;
 const uint64_t DEFAULT_DUST_THRESHOLD                        = UINT64_C(10);
 
 const uint64_t DIFFICULTY_TARGET                             = 30; // seconds
@@ -73,6 +72,10 @@ const size_t   DIFFICULTY_LAG                                = 0;  // !!!
 const size_t   DIFFICULTY_LAG_V1                             = 15;
 const size_t   DIFFICULTY_LAG_V2                             = 15;
 static_assert(2 * DIFFICULTY_CUT <= DIFFICULTY_WINDOW - 2, "Bad DIFFICULTY_WINDOW or DIFFICULTY_CUT");
+
+const uint64_t CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V1                 = 60 * 60 * 2;
+const uint64_t CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V2                 = 7 * DIFFICULTY_TARGET;
+const uint64_t CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V2_UPGRADE_HEIGHT  = 15880;
 
 const size_t   MAX_BLOCK_SIZE_INITIAL                        = 100000;
 const uint64_t MAX_BLOCK_SIZE_GROWTH_SPEED_NUMERATOR         = 100 * 1024;
@@ -91,8 +94,8 @@ const size_t   FUSION_TX_MIN_IN_OUT_COUNT_RATIO              = 4;
 
 const uint32_t KEY_IMAGE_CHECKING_BLOCK_INDEX                = 0;
 const uint32_t UPGRADE_HEIGHT_V2                             = 1;
-const uint32_t UPGRADE_HEIGHT_V3                             = 2;
-const uint32_t UPGRADE_HEIGHT_V4                             = 350000; // Upgrade height for CN-Lite Variant 1 switch.
+const uint32_t UPGRADE_HEIGHT_V3                             = 1;
+const uint32_t UPGRADE_HEIGHT_V4                             = 1; // Upgrade height for CN-Lite Variant 1 switch.
 const unsigned UPGRADE_VOTING_THRESHOLD                      = 90;               // percent
 const uint32_t UPGRADE_VOTING_WINDOW                         = EXPECTED_NUMBER_OF_BLOCKS_PER_DAY;  // blocks
 const uint32_t UPGRADE_WINDOW                                = EXPECTED_NUMBER_OF_BLOCKS_PER_DAY;  // blocks
@@ -106,7 +109,7 @@ const char     P2P_NET_DATA_FILENAME[]                       = "p2pstate.bin";
 const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json";
 } // parameters
 
-const char     CRYPTONOTE_NAME[]                             = "TurtleCoin";
+const char     CRYPTONOTE_NAME[]                             = "TestVico";
 
 const uint8_t  TRANSACTION_VERSION_1                         =  1;
 const uint8_t  TRANSACTION_VERSION_2                         =  2;
@@ -141,14 +144,11 @@ const size_t   P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT          = 5000;          //
 const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 
 const char* const SEED_NODES[] = {
-  "46.101.132.184:11897",
-  "163.172.147.52:11897",
-  "51.15.138.214:11897",
-  "51.15.137.77:11897",
-  "174.138.68.141:11897", //^ rock
-  "145.239.88.119:11999", //cision
-  "142.44.242.106:11897", //tom
-  "165.227.252.132:11897" //iburnmycd
+  "159.89.179.112:11897",
+  "159.89.36.253:11897",
+  "107.189.38.102:11500",
+  "107.189.38.102:11600",
+  "107.189.38.102:11700"
 };
 } // CryptoNote
 
