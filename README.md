@@ -12,5 +12,6 @@ Note that there are missing params that need to be filled in, this is on purpose
 
 - [vico-7xT](https://github.com/turtlecoin/testnet/tree/vico-7xT)
 - [main-clone](https://github.com/turtlecoin/testnet/tree/main-clone)
+- [lwma-2](https://github.com/turtlecoin/testnet/tree/lwma-2)
 
 ## Previous Testnets
