@@ -509,8 +509,6 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount,
         return;
     }
 
-    bool retried = false;
-
     while (true)
     {
         try
@@ -556,14 +554,6 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount,
         }
         catch (const std::system_error &e)
         {
-            if (retried)
-            {
-                std::cout << WarningMsg("Failed to send transaction!")
-                          << std::endl << "Error message: " << e.what()
-                          << std::endl;
-                return;
-            }
-
             bool wrongAmount = false;
 
             switch (e.code().value())
@@ -597,22 +587,8 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount,
                     std::cout << "Try lowering the amount you are "
                               << "sending in one transaction."
                               << std::endl
-                              << "Alternatively, you can set the mixin "
-                              << "count to 0."
+                              << WarningMsg("Cancelling transaction.")
                               << std::endl;
-
-                    if(confirm("Retry transaction with mixin of 0? "
-                               "This will compromise privacy."))
-                    {
-                        p.mixIn = 0;
-                        retried = true;
-                        continue;
-                    }
-                    else
-                    {
-                        std::cout << WarningMsg("Cancelling transaction.")
-                                  << std::endl;
-                    }
 
                     break;
                 }
@@ -914,13 +890,7 @@ bool parseMixin(std::string mixinString)
         /* We shouldn't need to check this is >0 because it should fail
            to parse as it's a uint16_t? */
         uint16_t mixin = std::stoi(mixinString);
-
-        /* Force them to use a set mixin, if we detect dust later, then we
-           will allow them to use 0 mixin. */
-        uint16_t minMixin = std::max(CryptoNote::parameters
-                                               ::MINIMUM_MIXIN_NO_DUST,
-                                     CryptoNote::parameters::MINIMUM_MIXIN_V1);
-
+        uint16_t minMixin = CryptoNote::parameters::MINIMUM_MIXIN_V1;
         uint16_t maxMixin = CryptoNote::parameters::MAXIMUM_MIXIN_V1;
 
         if (mixin < minMixin)
