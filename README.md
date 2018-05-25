@@ -1,7 +1,7 @@
 ![TESTNET In Operation](https://user-images.githubusercontent.com/317/40411678-465103e0-5e9b-11e8-8ac0-84538920aabe.png)
 
 **Testnet Name:** LWMA-2  
-**Current Status:** starting  
+**Current Status:** running  
 
 **Algorithms**  
 Hash: CryptoNight Lite Variant 1  
