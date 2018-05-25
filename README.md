@@ -2,6 +2,7 @@
 
 **Testnet Name:** LWMA-2  
 **Current Status:** running  
+**Lead Developer:** @ZedPea
 
 **Algorithms**  
 Hash: CryptoNight Lite Variant 1  
