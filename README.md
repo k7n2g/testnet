@@ -2,7 +2,7 @@
 
 **Testnet Name:** LWMA-2  
 **Current Status:** running  
-**Lead Developer:** @ZedPea
+**Lead Developer:** [GH:ZedPea](https://github.com/ZedPea) / [Discord:@Zpalmtree#9096](http://discord.turtlecoin.lol)
 
 **Algorithms**  
 Hash: CryptoNight Lite Variant 1  
