@@ -19,6 +19,7 @@
 #include <cctype>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/math/special_functions/round.hpp>
 #include "../Common/Base58.h"
 #include "../Common/int-util.h"
 #include "../Common/StringTools.h"
@@ -148,7 +149,12 @@ size_t Currency::difficultyCutByBlockVersion(uint8_t blockMajorVersion) const {
   }
 }
 
-size_t Currency::difficultyBlocksCountByBlockVersion(uint8_t blockMajorVersion) const {
+size_t Currency::difficultyBlocksCountByBlockVersion(uint8_t blockMajorVersion, uint32_t height) const {
+  if (height >= CryptoNote::parameters::LWMA_DIFFICULTY_BLOCK_INDEX)
+  {
+      return CryptoNote::parameters::DIFFICULTY_BLOCKS_COUNT_V3;
+  }
+
   return difficultyWindowByBlockVersion(blockMajorVersion) + difficultyLagByBlockVersion(blockMajorVersion);
 }
 
@@ -433,6 +439,80 @@ bool Currency::parseAmount(const std::string& str, uint64_t& amount) const {
   }
 
   return Common::fromString(strAmount, amount);
+}
+
+Difficulty Currency::getNextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const
+{
+    if (blockIndex < CryptoNote::parameters::LWMA_DIFFICULTY_BLOCK_INDEX)
+    {
+        return nextDifficulty(version, blockIndex, timestamps, cumulativeDifficulties);
+    }
+    else
+    {
+        return nextDifficultyV3(timestamps, cumulativeDifficulties);
+    }
+}
+
+Difficulty Currency::nextDifficultyV3(std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulative_difficulties) const
+{
+    double T = CryptoNote::parameters::DIFFICULTY_TARGET;
+    double N = CryptoNote::parameters::DIFFICULTY_WINDOW_V3;
+    double FTL = CryptoNote::parameters::CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V3;
+    double L = 0;
+    double sum6ST = 0;
+    double prev_D;
+
+    if (timestamps.size() >= N+1)
+    {
+        timestamps.resize(N+1);
+        cumulative_difficulties.resize(N+1);
+    }
+    else if (timestamps.size() >= 4)
+    {
+        N = timestamps.size() - 1;
+    }
+    else
+    {
+        return 100;
+    }
+
+    for (int64_t i = 1; i <= N; i++)
+    {
+        double ST = std::max(-FTL, std::min(double(timestamps[i] - timestamps[i-1]), 6 * T));
+        L += ST * i;
+
+        if (i > N-6)
+        {
+            sum6ST += ST;
+        }
+    }
+
+    /* Sanity test */
+    if (L < T * N)
+    {
+        L = T * N * 10;
+    }
+
+    double next_D = (cumulative_difficulties[N] - cumulative_difficulties[0]) * T * (N+1) * 0.991 / (L*2);
+
+    prev_D = cumulative_difficulties[N] - cumulative_difficulties[N-1];
+
+    if (sum6ST < 1.2 * T && next_D < 1.4 * prev_D)
+    {
+        next_D = 1.4 * prev_D;
+    }
+
+    if (next_D < 0.9 * prev_D)
+    {
+        next_D = 0.9 * prev_D;
+    }
+
+    if (ceil(next_D + 0.01) > ceil(next_D))
+    {
+        next_D = ceil(next_D + 0.03);
+    }
+
+    return static_cast<uint64_t>(next_D);
 }
 
 Difficulty Currency::nextDifficulty(std::vector<uint64_t> timestamps,
