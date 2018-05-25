@@ -151,7 +151,9 @@ const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 
 // You'll need seed nodes put some in here
 const char* const SEED_NODES[] = {
-  //"ip:port", < it's an array so figure out the comma
+  "35.232.27.159:10210", // SoreGums
+  "35.232.27.159:10220", // SoreGums
+  "35.232.27.159:10230"  // SoreGums
 };
 } // CryptoNote
 
