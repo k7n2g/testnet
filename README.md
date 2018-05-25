@@ -18,8 +18,8 @@ Note that there are missing parameters that need to be filled in, this is on pur
     - [TurtleWallet.io](https://beta.turtlewallet.io/) - [Discord](https://discord.gg/Z4utZ7x)
   * so use this one if need to test coins stuff
 - [main-clone](https://github.com/turtlecoin/testnet/tree/main-clone)
+- [lwma-2](https://github.com/turtlecoin/testnet/tree/lwma-2)
 
-## Previous Testnets
 ## Previous Testnets
 
 - [lwma-2](https://github.com/turtlecoin/testnet/tree/lwma-2)
