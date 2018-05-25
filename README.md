@@ -11,7 +11,8 @@ Difficulty: LWMA-2  
 **Pool**: https://testnet-lwma-2.turtlecoin.ws/  
 
 **Purpose**    
-z???
+Testing the effects of the LWMA-2 difficulty algorithm (https://github.com/zawy12/difficulty-algorithms/issues/3)
+Other slight changes include raising the minimum mixin limits, and lowering the dust threshold to zero.
 
 You can running anything you want on this testnet, if you run into issues ping us in [\#dev-general chat](http://discord.turtlecoin.lol)  
 
