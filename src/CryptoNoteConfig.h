@@ -144,11 +144,9 @@ const size_t   P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT          = 5000;          //
 const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 
 const char* const SEED_NODES[] = {
-  "159.89.179.112:11897",
-  "159.89.36.253:11897",
-  "107.189.38.102:11500",
-  "107.189.38.102:11600",
-  "107.189.38.102:11700"
+  "35.232.27.159:10310", // SoreGums
+  "35.232.27.159:10320", // SoreGums
+  "35.232.27.159:10330"  // SoreGums
 };
 } // CryptoNote
 
