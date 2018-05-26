@@ -9,7 +9,8 @@ Hash: CryptoNight Lite Variant 1
 Difficulty: LWMA-2  
 
 **Block Explorer:** https://testnet-lwma-2.turtlecoin.ws/blocks/  
-**Pool**: https://testnet-lwma-2.turtlecoin.ws/  
+**Pool**: https://testnet-lwma-2.turtlecoin.ws/  
+**Seed Status**: https://testnet-lwma-2.turtlecoin.ws/status/
 
 **Purpose**    
 Testing the effects of the LWMA-2 difficulty algorithm (https://github.com/zawy12/difficulty-algorithms/issues/3)
