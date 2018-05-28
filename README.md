@@ -11,6 +11,10 @@ Note that there are missing params that need to be filled in, this is on purpose
 ## Current Live Testnets
 
 - [vico-7xT](https://github.com/turtlecoin/testnet/tree/vico-7xT)
+  * Wallets being tested here
+    - [Vico Web Wallet](https://vico-web-wallet.turtlecoin.ws/redeem.php?key=wVishaQguTRTL70Mem5rLOTasdTOblnY8JBjTRTLtk4mE3sLOTafTO2QNfhkwVnpDrgu6sFcTRTLhkbt8ZjLOTasdadTOqJRWzl7Yl) - [Discord](https://discord.gg/FBzS7J6)
+    - [TurtleWallet.io](https://beta.turtlewallet.io/) - [Discord](https://beta.turtlewallet.io/)
+  * so use this one if need to test coins stuff
 - [main-clone](https://github.com/turtlecoin/testnet/tree/main-clone)
 - [lwma-2](https://github.com/turtlecoin/testnet/tree/lwma-2)
 
