@@ -505,7 +505,7 @@ Difficulty Currency::nextDifficultyV3(std::vector<uint64_t> timestamps, std::vec
     next_D = (cumulative_difficulties[N] - cumulative_difficulties[0]) * T * (N+1) * 0.991 / (L*2);
     prev_D = cumulative_difficulties[N] - cumulative_difficulties[N-1];
     SMAn = (cumulative_difficulties[N] - cumulative_difficulties[0]) * 4 * T;
-    SMAd = 3 * N * T + double(timestamps[N] - timestamps[0]);
+    SMAd = 3 * N * T + double(timestamps[N]) - double(timestamps[N-1]);
 
     if (1.14 * next_D * SMAd > 1.70 * SMAn)
     {
