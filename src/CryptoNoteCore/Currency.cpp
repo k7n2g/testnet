@@ -459,7 +459,7 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
     int64_t N = CryptoNote::parameters::DIFFICULTY_WINDOW_V3;
     int64_t FTL = CryptoNote::parameters::CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V3;
 
-    int64_t L(0), sum_3_ST(0), sum_6_ST(0), next_D, prev_D, SMA;
+    int64_t L(0), sum_3_ST(0), next_D, prev_D, SMA;
 
     if (timestamps.size() > static_cast<uint64_t>(N))
     {
@@ -477,7 +477,7 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
 
     for (int64_t i = 1; i <= N; i++)
     {  
-        double ST = std::max(-FTL, std::min(static_cast<int64_t>(timestamps[i] - timestamps[i-1]), 6 * T));
+        int64_t ST = std::max(-FTL, std::min(static_cast<int64_t>(timestamps[i] - timestamps[i-1]), 6 * T));
 
         L +=  ST * i; 
 
@@ -489,7 +489,7 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
 
     if (L < T * N)
     {
-        L= T*N*6;
+        L= T * N * 6;
     }
 
     next_D = 0.5 + (cumulativeDifficulties[N] - cumulativeDifficulties[0]) * T * (N+1) * 0.985 * 0.5 / L;
