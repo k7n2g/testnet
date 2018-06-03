@@ -499,13 +499,13 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
 
     if (sum_3_ST < T)
     {  
-        if (1.07 * prev_D < 1.20 * SMA)
+        if (1.09 * prev_D < 1.25 * SMA)
         {
-            next_D = 1.07 * prev_D;
+            next_D = 1.09 * prev_D;
         }
         else
         {
-            next_D = std::max(next_D, static_cast<int64_t>(0.5 * (1.07 * prev_D + 1.2 * SMA)));
+            next_D = std::max(next_D, static_cast<int64_t>(0.5 * (1.09 * prev_D + 1.25 * SMA)));
         }
     }
     else if (next_D < 0.9 * SMA)
