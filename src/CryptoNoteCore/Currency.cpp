@@ -453,25 +453,20 @@ Difficulty Currency::getNextDifficulty(uint8_t version, uint32_t blockIndex, std
     }
 }
 
-Difficulty Currency::nextDifficultyV3(std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulative_difficulties) const
+Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const
 {
-    double T = CryptoNote::parameters::DIFFICULTY_TARGET;
-    double N = CryptoNote::parameters::DIFFICULTY_WINDOW_V3;
-    double FTL = CryptoNote::parameters::CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V3;
-    double L = 0;
-    double sum_6_ST = 0;
-    double sum_9_ST = 0;
-    double next_D;
-    double prev_D;
-    double SMAn;
-    double SMAd;
+    int64_t T = CryptoNote::parameters::DIFFICULTY_TARGET;
+    int64_t N = CryptoNote::parameters::DIFFICULTY_WINDOW_V3;
+    int64_t FTL = CryptoNote::parameters::CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V3;
 
-    if (timestamps.size() > N)
+    int64_t L(0), sum_3_ST(0), sum_6_ST(0), next_D, prev_D, SMA;
+
+    if (timestamps.size() > static_cast<uint64_t>(N))
     {
         timestamps.resize(N+1);
-        cumulative_difficulties.resize(N+1);
+        cumulativeDifficulties.resize(N+1);
     }
-    else if (timestamps.size() >= 4)
+    else if (timestamps.size() >= 32)
     {
         N = timestamps.size() - 1;
     }
@@ -481,55 +476,45 @@ Difficulty Currency::nextDifficultyV3(std::vector<uint64_t> timestamps, std::vec
     }
 
     for (int64_t i = 1; i <= N; i++)
-    {
-        double ST = std::max(-FTL, std::min(double(timestamps[i] - timestamps[i-1]), 6 * T));
+    {  
+        double ST = std::max(-FTL, std::min(static_cast<int64_t>(timestamps[i] - timestamps[i-1]), 6 * T));
 
-        L += ST * i;
+        L +=  ST * i; 
 
         if (i > N-6)
         {
             sum_6_ST += ST;
-        }
-
-        if (i > N-9)
-        {
-            sum_9_ST += ST;
-        }
+        } 
     }
 
     if (L < T * N)
     {
-        L = T * N * 6;
+        L= T*N*6;
     }
 
-    next_D = (cumulative_difficulties[N] - cumulative_difficulties[N-1]) * T * (N+1) * 0.991 / (L*2);
-    prev_D = cumulative_difficulties[N] - cumulative_difficulties[N-1];
-    SMAn = (cumulative_difficulties[N] - cumulative_difficulties[N-1]) * 4 * T;
-    SMAd = 3 * N * T + double(timestamps[N]) - double(timestamps[N-1]);
+    next_D = 0.5 + (cumulativeDifficulties[N] - cumulativeDifficulties[0]) * T * (N+1) * 0.985 * 0.5 / L;
+    prev_D = cumulativeDifficulties[N] - cumulativeDifficulties[N-1];
 
-    if (1.14 * next_D * SMAd > 1.70 * SMAn)
-    {
-        if (next_D < 0.7 * prev_D)
+    SMA = 0.5 + (cumulativeDifficulties[N-4] - cumulativeDifficulties[N-31]) * 4 * T / (3 * N * T + timestamps[N-5] - timestamps[N-30]); 
+
+    if (sum_3_ST < T)
+    {  
+        if (1.07 * prev_D < 1.20 * SMA)
         {
-            next_D = 0.7 * prev_D;
+            next_D = 1.07 * prev_D;
+        }
+        else
+        {
+            next_D = std::max(next_D, static_cast<int64_t>(0.5 * (1.07 * prev_D + 1.2 * SMA)));
         }
     }
-    else if (1.3 * next_D * SMAd < 1.70 * SMAn && sum_6_ST < 1.2 * T)
+    else if (next_D < 0.9 * SMA)
     {
-        next_D = 1.3 * prev_D;
+        next_D = 0.5 * (next_D + 0.9 * SMA);
     }
-    else if (sum_9_ST < 3.4 * T)
+    else if (next_D > 1.2 * SMA)
     {
-        next_D = 1.14 * prev_D;
-    }
-    else if (next_D < 0.9 * prev_D)
-    {
-        next_D = 0.9 * prev_D;
-    }
-
-    if (ceil(next_D + 0.01) > ceil(next_D))
-    {
-        next_D = ceil(next_D + 0.03);
+        next_D = 0.5 * (next_D + 1.2 * SMA); 
     }
 
     return static_cast<uint64_t>(next_D);
