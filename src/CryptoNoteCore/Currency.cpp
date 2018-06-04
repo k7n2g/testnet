@@ -481,15 +481,15 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
 
         L +=  ST * i; 
 
-        if (i > N-6)
+        if (i > N-3)
         {
-            sum_6_ST += ST;
+            sum_3_ST += ST;
         } 
     }
 
     if (L < T * N)
     {
-        L= T * N * 6;
+        L = T * N * 6;
     }
 
     next_D = 0.5 + (cumulativeDifficulties[N] - cumulativeDifficulties[0]) * T * (N+1) * 0.985 * 0.5 / L;
