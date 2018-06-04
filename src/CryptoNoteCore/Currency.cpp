@@ -459,7 +459,7 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
     int64_t N = CryptoNote::parameters::DIFFICULTY_WINDOW_V3;
     int64_t FTL = CryptoNote::parameters::CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V3;
 
-    int64_t L(0), sum_3_ST(0), next_D, prev_D, SMA;
+    int64_t L(0), ST, sum_3_ST(0), next_D, prev_D, SMA;
 
     if (timestamps.size() > static_cast<uint64_t>(N))
     {
@@ -477,7 +477,7 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
 
     for (int64_t i = 1; i <= N; i++)
     {  
-        int64_t ST = std::max(-FTL, std::min(static_cast<int64_t>(timestamps[i] - timestamps[i-1]), 6 * T));
+        ST = std::max(-FTL, std::min(static_cast<int64_t>(timestamps[i] - timestamps[i-1]), 6 * T));
 
         L +=  ST * i; 
 
@@ -492,29 +492,21 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
         L = T * N * 6;
     }
 
-    next_D = 0.5 + (cumulativeDifficulties[N] - cumulativeDifficulties[0]) * T * (N+1) * 0.985 * 0.5 / L;
+    next_D = (cumulativeDifficulties[N] - cumulativeDifficulties[0]) * T * (N+1) * 99 / (100 * 2 * L);
     prev_D = cumulativeDifficulties[N] - cumulativeDifficulties[N-1];
 
-    SMA = 0.5 + (cumulativeDifficulties[N-4] - cumulativeDifficulties[N-31]) * 4 * T / (3 * N * T + timestamps[N-5] - timestamps[N-30]); 
+    SMA = (cumulativeDifficulties[N-4] - cumulativeDifficulties[N-31]) * 4 * T / (3 * N * T + static_cast<int64_t>(timestamps[N-5] - timestamps[N-30]));
 
-    if (sum_3_ST < T)
+    if (sum_3_ST < 8 * T / 10)
     {  
-        if (1.09 * prev_D < 1.25 * SMA)
+        if (prev_D < 12 * SMA / 10)
         {
-            next_D = 1.09 * prev_D;
+            next_D = 109 * prev_D / 100;
         }
         else
         {
-            next_D = std::max(next_D, static_cast<int64_t>(0.5 * (1.09 * prev_D + 1.25 * SMA)));
+            next_D = std::max(next_D, (109 * prev_D / 100 + 12 * SMA / 10) / 2);
         }
-    }
-    else if (next_D < 0.9 * SMA)
-    {
-        next_D = 0.5 * (next_D + 0.9 * SMA);
-    }
-    else if (next_D > 1.2 * SMA)
-    {
-        next_D = 0.5 * (next_D + 1.2 * SMA); 
     }
 
     return static_cast<uint64_t>(next_D);
