@@ -7,9 +7,9 @@
 Hash: CryptoNight Lite Variant 1  
 Difficulty: ???? 7xT  
 
-**Seed Node Status**: https://testnet-vico-7xt.turtlecoin.ws/status/
-**Block Explorer:** https://testnet-vico-7xt.turtlecoin.ws/blocks/
-**Mining Pool**: https://testnet-vico-7xt.turtlecoin.ws/pool/
+**Seed Node Status**: https://testnet-vico-7xt.turtlecoin.ws/status/  
+**Block Explorer:** https://testnet-vico-7xt.turtlecoin.ws/blocks/  
+**Mining Pool**: https://testnet-vico-7xt.turtlecoin.ws/pool/  
 
 **Purpose**  
 Right now it is the only live testnet.  
