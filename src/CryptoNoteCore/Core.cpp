@@ -1571,6 +1571,8 @@ void Core::save() {
 void Core::load() {
   initRootSegment();
 
+  start_time = std::time(nullptr);
+
   auto dbBlocksCount = chainsLeaves[0]->getTopBlockIndex() + 1;
   auto storageBlocksCount = mainChainStorage->getBlockCount();
 
@@ -2407,6 +2409,11 @@ uint64_t Core::get_current_blockchain_height() const
 {
 	// TODO: remove when GetCoreStatistics is implemented
 	return mainChainStorage->getBlockCount();
+}
+
+std::time_t Core::getStartTime() const 
+{
+  return start_time;
 }
 
 }

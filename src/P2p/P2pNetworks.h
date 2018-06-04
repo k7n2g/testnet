@@ -21,7 +21,7 @@ namespace CryptoNote
 {
   // uncomnment below and put in some new vals for the first three bytes
   // mainnet:  0xb5, 0x0c, 0x4a < so don't use these values
-  // vico-7xT: 0x42, 0x1c, 0x1a < don't use these either
+  // vico-7xT: 0x11, 0x11, 0x1f < don't use these either
   // main-clone: 0x22, 0x4c, 0x2f < don't use these either
   // lwma-2: 0x66, 0x77, 0x88 < don't use these either
   // your-testnet: vals here and PR please ;)
