@@ -487,9 +487,9 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
         } 
     }
 
-    if (L < T * N)
+    if (L < T * N * (N+1) / 2 / 10)
     {
-        L = T * N * 6;
+        L = T * N * (N+1) / 2 / 10;
     }
 
     next_D = (cumulativeDifficulties[N] - cumulativeDifficulties[0]) * T * (N+1) * 99 / (100 * 2 * L);
