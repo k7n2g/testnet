@@ -293,7 +293,7 @@ void splitTx(CryptoNote::WalletGreen &wallet,
 }
 
 void transfer(std::shared_ptr<WalletInfo> walletInfo,
-              std::vector<std::string> args)
+              std::vector<std::string> args, uint32_t height)
 {
     uint16_t mixin;
     std::string address;
@@ -386,10 +386,10 @@ void transfer(std::shared_ptr<WalletInfo> walletInfo,
         }
     }
 
-    doTransfer(mixin, address, amount, fee, extra, walletInfo);
+    doTransfer(mixin, address, amount, fee, extra, walletInfo, height);
 }
 
-void transfer(std::shared_ptr<WalletInfo> walletInfo)
+void transfer(std::shared_ptr<WalletInfo> walletInfo, uint32_t height)
 {
     std::cout << InformationMsg("Note: You can type cancel at any time to "
                                 "cancel the transaction")
@@ -471,12 +471,13 @@ void transfer(std::shared_ptr<WalletInfo> walletInfo)
 
     std::string extra = maybeExtra.x;
 
-    doTransfer(mixin, address, amount, fee, extra, walletInfo);
+    doTransfer(mixin, address, amount, fee, extra, walletInfo, height);
 }
 
 void doTransfer(uint16_t mixin, std::string address, uint64_t amount,
                 uint64_t fee, std::string extra,
-                std::shared_ptr<WalletInfo> walletInfo)
+                std::shared_ptr<WalletInfo> walletInfo,
+                uint32_t height)
 {
     uint64_t balance = walletInfo->wallet.getActualBalance();
 
@@ -509,124 +510,154 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount,
         return;
     }
 
-    try
-    {
-        if (walletInfo->wallet.txIsTooLarge(p))
-        {
-            if (!fusionTX(walletInfo->wallet, p))
-            {
-                return;
-            }
+    bool retried = false;
 
+    while (true)
+    {
+        try
+        {
             if (walletInfo->wallet.txIsTooLarge(p))
             {
-                splitTx(walletInfo->wallet, p);
+                if (!fusionTX(walletInfo->wallet, p))
+                {
+                    return;
+                }
+
+                if (walletInfo->wallet.txIsTooLarge(p))
+                {
+                    splitTx(walletInfo->wallet, p);
+                }
+                else
+                {
+                    
+                    size_t id = walletInfo->wallet.transfer(p);
+                    CryptoNote::WalletTransaction tx
+                        = walletInfo->wallet.getTransaction(id);
+
+                    std::cout << SuccessMsg("Transaction has been sent!")
+                              << std::endl
+                              << SuccessMsg("Hash:" 
+                                          + Common::podToHex(tx.hash))
+                              << std::endl;
+                }
             }
             else
             {
-                
                 size_t id = walletInfo->wallet.transfer(p);
-                CryptoNote::WalletTransaction tx
+                
+                CryptoNote::WalletTransaction tx 
                     = walletInfo->wallet.getTransaction(id);
 
                 std::cout << SuccessMsg("Transaction has been sent!")
                           << std::endl
-                          << SuccessMsg("Hash:" 
-                                      + Common::podToHex(tx.hash))
+                          << SuccessMsg("Hash: " + 
+                                        Common::podToHex(tx.hash))
                           << std::endl;
             }
         }
-        else
+        catch (const std::system_error &e)
         {
-            size_t id = walletInfo->wallet.transfer(p);
-            
-            CryptoNote::WalletTransaction tx 
-                = walletInfo->wallet.getTransaction(id);
-
-            std::cout << SuccessMsg("Transaction has been sent!")
-                      << std::endl
-                      << SuccessMsg("Hash: " + 
-                                    Common::podToHex(tx.hash))
-                      << std::endl;
-        }
-    }
-    catch (const std::system_error &e)
-    {
-        bool wrongAmount = false;
-
-        switch (e.code().value())
-        {
-            case WalletErrors::CryptoNote::error::WRONG_AMOUNT:
+            if (retried)
             {
-                wrongAmount = true;
-                [[fallthrough]];
-            }
-            case WalletErrors::CryptoNote::error::MIXIN_COUNT_TOO_BIG:
-            case NodeErrors::CryptoNote::error::INTERNAL_NODE_ERROR:
-            {
-        
-                if (wrongAmount)
-                {
-                    std::cout << WarningMsg("Failed to send transaction "
-                                            "- not enough funds!")
-                              << std::endl
-                              << "Unable to send dust inputs."
-                              << std::endl;
-                }
-                else
-                {
-                    std::cout << WarningMsg("Failed to send transaction!")
-                              << std::endl
-                              << "Unable to find enough outputs to "
-                              << "mix with."
-                              << std::endl;
-                }
-
-                std::cout << "Try lowering the amount you are "
-                          << "sending in one transaction."
-                          << std::endl
-                          << WarningMsg("Cancelling transaction.")
-                          << std::endl;
-
-                break;
-            }
-            case NodeErrors::CryptoNote::error::NETWORK_ERROR:
-            case NodeErrors::CryptoNote::error::CONNECT_ERROR:
-            {
-                std::cout << WarningMsg("Couldn't connect to the network "
-                                        "to send the transaction!")
-                          << std::endl
-                          << "Ensure TurtleCoind or the remote node you "
-                          << "are using is open and functioning."
-                          << std::endl;
-                break;
-            }
-            default:
-            {
-                /* Some errors don't have an associated value, just an
-                   error string */
-                std::string msg = e.what();
-
-                if (msg == "Failed add key input: key image already spent")
-                {
-                    std::cout << WarningMsg("Failed to send transaction - "
-                                            "wallet is not synced yet!")
-                              << std::endl
-                              << "Use the " << InformationMsg("bc_height")
-                              << " command to view the wallet sync status."
-                              << std::endl;
-                    return;
-                }
-
                 std::cout << WarningMsg("Failed to send transaction!")
-                          << std::endl << "Error message: " << msg
-                          << std::endl
-                          << "Please report what you were doing to cause "
-                          << "this error so we can fix it! :)"
+                          << std::endl << "Error message: " << e.what()
                           << std::endl;
-                break;
+                return;
+            }
+
+            bool wrongAmount = false;
+
+            switch (e.code().value())
+            {
+                case WalletErrors::CryptoNote::error::WRONG_AMOUNT:
+                {
+                    wrongAmount = true;
+                    [[fallthrough]];
+                }
+                case WalletErrors::CryptoNote::error::MIXIN_COUNT_TOO_BIG:
+                case NodeErrors::CryptoNote::error::INTERNAL_NODE_ERROR:
+                {
+            
+                    if (wrongAmount)
+                    {
+                        std::cout << WarningMsg("Failed to send transaction "
+                                                "- not enough funds!")
+                                  << std::endl
+                                  << "Unable to send dust inputs."
+                                  << std::endl;
+                    }
+                    else
+                    {
+                        std::cout << WarningMsg("Failed to send transaction!")
+                                  << std::endl
+                                  << "Unable to find enough outputs to "
+                                  << "mix with."
+                                  << std::endl;
+                    }
+
+                    std::cout << "Try lowering the amount you are sending "
+                              << "in one transaction." << std::endl;
+
+                    /* Mixin 0 not allowed after MIXIN_LIMITS_V2 */
+                    if (height < CryptoNote::parameters::MIXIN_LIMITS_V2_HEIGHT)
+                    {
+                        std::cout << "Alternatively, you can sent the mixin "
+                                  << "count to 0.";
+
+                        if(confirm("Retry transaction with mixin of 0? "
+                                   "This will compromise privacy."))
+                        {
+                            p.mixIn = 0;
+                            retried = true;
+                            continue;
+                        }
+                    }
+
+                    std::cout << WarningMsg("Cancelling transaction.")
+                              << std::endl;
+
+                    break;
+                }
+                case NodeErrors::CryptoNote::error::NETWORK_ERROR:
+                case NodeErrors::CryptoNote::error::CONNECT_ERROR:
+                {
+                    std::cout << WarningMsg("Couldn't connect to the network "
+                                            "to send the transaction!")
+                              << std::endl
+                              << "Ensure TurtleCoind or the remote node you "
+                              << "are using is open and functioning."
+                              << std::endl;
+                    break;
+                }
+                default:
+                {
+                    /* Some errors don't have an associated value, just an
+                       error string */
+                    std::string msg = e.what();
+
+                    if (msg == "Failed add key input: key image already spent")
+                    {
+                        std::cout << WarningMsg("Failed to send transaction - "
+                                                "wallet is not synced yet!")
+                                  << std::endl
+                                  << "Use the " << InformationMsg("bc_height")
+                                  << " command to view the wallet sync status."
+                                  << std::endl;
+                        return;
+                    }
+
+                    std::cout << WarningMsg("Failed to send transaction!")
+                              << std::endl << "Error message: " << msg
+                              << std::endl
+                              << "Please report what you were doing to cause "
+                              << "this error so we can fix it! :)"
+                              << std::endl;
+                    break;
+                }
             }
         }
+
+        break;
     }
 }
 
@@ -885,8 +916,11 @@ bool parseMixin(std::string mixinString)
         /* We shouldn't need to check this is >0 because it should fail
            to parse as it's a uint16_t? */
         uint16_t mixin = std::stoi(mixinString);
-        uint16_t minMixin = CryptoNote::parameters::MINIMUM_MIXIN_V1;
-        uint16_t maxMixin = CryptoNote::parameters::MAXIMUM_MIXIN_V1;
+
+        /* Force them to use a set mixin, if we detect dust later, then we
+           will allow them to use 0 mixin. */
+        uint16_t minMixin = CryptoNote::parameters::MINIMUM_MIXIN_V2;
+        uint16_t maxMixin = CryptoNote::parameters::MAXIMUM_MIXIN_V2;
 
         if (mixin < minMixin)
         {
