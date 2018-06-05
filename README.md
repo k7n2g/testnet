@@ -6,7 +6,6 @@ Each branch of this repo is a testnet, on each branch the README.md should expla
 This master branch will be kept in sync with upstream master turtlecoin/turtlecoin and testnets can be created from master:  
 > git checkout -b new-testnet
 
-Note that there are missing params that need to be filled in, this is on purpose to avoid accidentally joining the testnet to mainnet.  
 Note that there are missing parameters that need to be filled in, this is on purpose to avoid accidentally joining the testnet to mainnet.  
 
 ## Current Live Testnets
