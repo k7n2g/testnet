@@ -458,26 +458,16 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
     int64_t T = CryptoNote::parameters::DIFFICULTY_TARGET;
     int64_t N = CryptoNote::parameters::DIFFICULTY_WINDOW_V3;
     int64_t FTL = CryptoNote::parameters::CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V3;
-
     int64_t L(0), ST, sum_3_ST(0), next_D, prev_D, SMA;
 
-    if (timestamps.size() > static_cast<uint64_t>(N))
+    if (timestamps.size() <= static_cast<uint64_t>(N))
     {
-        timestamps.resize(N+1);
-        cumulativeDifficulties.resize(N+1);
-    }
-    else if (timestamps.size() >= 32)
-    {
-        N = timestamps.size() - 1;
-    }
-    else
-    {
-        return 100;
+        return 1000;
     }
 
     for (int64_t i = 1; i <= N; i++)
     {  
-        ST = std::max(-FTL, std::min(static_cast<int64_t>(timestamps[i] - timestamps[i-1]), 6 * T));
+        ST = std::max(-FTL, std::min(static_cast<int64_t>(timestamps[i]) - static_cast<int64_t>(timestamps[i-1]), 6 * T));
 
         L +=  ST * i; 
 
@@ -487,26 +477,15 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
         } 
     }
 
-    if (L < T * N * (N+1) / 2 / 10)
-    {
-        L = T * N * (N+1) / 2 / 10;
-    }
-
-    next_D = (cumulativeDifficulties[N] - cumulativeDifficulties[0]) * T * (N+1) * 99 / (100 * 2 * L);
+    next_D = (cumulativeDifficulties[N-1] - cumulativeDifficulties[0]) * T * (N+1) * 99 / (100 * 2 * L);
     prev_D = cumulativeDifficulties[N] - cumulativeDifficulties[N-1];
 
-    SMA = (cumulativeDifficulties[N-4] - cumulativeDifficulties[N-31]) * 4 * T / (3 * N * T + static_cast<int64_t>(timestamps[N-5] - timestamps[N-30]));
+    SMA = (cumulativeDifficulties[N] - cumulativeDifficulties[N-N/2]) * 4 * T /
+          (3 * (N-N/2) * T + static_cast<int64_t>(timestamps[N]) - static_cast<int64_t>(timestamps[N-N/2]));
 
-    if (sum_3_ST < 8 * T / 10)
+    if (sum_3_ST < (8 * T) / 10 && (prev_D * 109) / 100 < (12*SMA) / 10)
     {  
-        if (prev_D < 12 * SMA / 10)
-        {
-            next_D = 109 * prev_D / 100;
-        }
-        else
-        {
-            next_D = std::max(next_D, (109 * prev_D / 100 + 12 * SMA / 10) / 2);
-        }
+        next_D = (prev_D * 109) / 100;
     }
 
     return static_cast<uint64_t>(next_D);
