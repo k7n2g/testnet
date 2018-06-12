@@ -477,13 +477,13 @@ Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std
         } 
     }
 
-    next_D = (cumulativeDifficulties[N-1] - cumulativeDifficulties[0]) * T * (N+1) * 99 / (100 * 2 * L);
+    next_D = (cumulativeDifficulties[N] - cumulativeDifficulties[0]) * T * (N+1) * 99 / (100 * 2 * L);
     prev_D = cumulativeDifficulties[N] - cumulativeDifficulties[N-1];
 
     SMA = (cumulativeDifficulties[N] - cumulativeDifficulties[N-N/2]) * 4 * T /
           (3 * (N-N/2) * T + static_cast<int64_t>(timestamps[N]) - static_cast<int64_t>(timestamps[N-N/2]));
 
-    if (sum_3_ST < (8 * T) / 10 && (prev_D * 109) / 100 < (12*SMA) / 10)
+    if (sum_3_ST < (8 * T) / 10 && (prev_D * 109) / 100 < (12 * SMA) / 10)
     {  
         next_D = (prev_D * 109) / 100;
     }
