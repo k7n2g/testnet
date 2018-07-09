@@ -11,7 +11,7 @@ RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
 ADD https://github.com/just-containers/socklog-overlay/releases/download/v2.1.0-0/socklog-overlay-amd64.tar.gz /tmp/
 RUN tar xzf /tmp/socklog-overlay-amd64.tar.gz -C /
 
-ARG TURTLECOIN_VERSION=v0.5.0
+ARG TURTLECOIN_VERSION=v0.6.0
 ENV TURTLECOIN_VERSION=${TURTLECOIN_VERSION}
 
 # install build dependencies
@@ -36,11 +36,11 @@ RUN apt-get update && \
     mkdir -p /usr/local/bin && \
     cp src/TurtleCoind /usr/local/bin/TurtleCoind && \
     cp src/walletd /usr/local/bin/walletd && \
-    cp src/simplewallet /usr/local/bin/simplewallet && \
+    cp src/zedwallet /usr/local/bin/zedwallet && \
     cp src/miner /usr/local/bin/miner && \
     strip /usr/local/bin/TurtleCoind && \
     strip /usr/local/bin/walletd && \
-    strip /usr/local/bin/simplewallet && \
+    strip /usr/local/bin/zedwallet && \
     strip /usr/local/bin/miner && \
     cd / && \
     rm -rf /src/turtlecoin && \

@@ -1,22 +1,9 @@
-/*
-Copyright (C) 2018, The TurtleCoin developers
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+// Copyright (c) 2018, The TurtleCoin Developers
+// 
+// Please see the included LICENSE file for more information.
 
 //////////////////////////////////
-#include <SimpleWallet/Commands.h>
+#include <ZedWallet/Commands.h>
 //////////////////////////////////
 
 #include <Common/StringTools.h>
@@ -27,12 +14,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #include <Mnemonics/electrum-words.h>
 
-#include <SimpleWallet/ColouredMsg.h>
-#include <SimpleWallet/Fusion.h>
-#include <SimpleWallet/Sync.h>
-#include <SimpleWallet/Tools.h>
-#include <SimpleWallet/Transfer.h>
-#include <SimpleWallet/Types.h>
+#include <ZedWallet/ColouredMsg.h>
+#include <ZedWallet/Fusion.h>
+#include <ZedWallet/Sync.h>
+#include <ZedWallet/Tools.h>
+#include <ZedWallet/Transfer.h>
+#include <ZedWallet/Types.h>
 
 void exportKeys(std::shared_ptr<WalletInfo> &walletInfo)
 {
@@ -102,11 +89,13 @@ void help(bool viewWallet)
               << SuccessMsg("export_keys", 25)
               << "Export your private keys" << std::endl
               << SuccessMsg("address", 25)
-              << "Displays your payment address" << std::endl
+              << "Display your payment address" << std::endl
               << SuccessMsg("exit", 25)
               << "Exit and save your wallet" << std::endl
               << SuccessMsg("save", 25)
               << "Save your wallet state" << std::endl
+              << SuccessMsg("status", 25)
+              << "Show daemon status" << std::endl
               << SuccessMsg("incoming_transfers", 25)
               << "Show incoming transfers" << std::endl;
                   
@@ -122,15 +111,19 @@ void help(bool viewWallet)
                   << "Show outgoing transfers" << std::endl
                   << SuccessMsg("list_transfers", 25)
                   << "Show all transfers" << std::endl
-                  << SuccessMsg("quick_optimize", 25)
-                  << "Quickly optimize your wallet to send large amounts"
-                  << std::endl
-                  << SuccessMsg("full_optimize", 25)
-                  << "Fully optimize your wallet to send large amounts"
+                  << SuccessMsg("save_csv", 25)
+                  << "Save all wallet transactions to CSV file" << std::endl
+                  << SuccessMsg("optimize", 25)
+                  << "Optimize your wallet to send large amounts"
                   << std::endl
                   << SuccessMsg("transfer", 25)
                   << "Send TRTL to someone" << std::endl;
     }
+}
+
+void status(CryptoNote::INode &node)
+{
+    std::cout << node.getInfo() << std::endl;
 }
 
 void balance(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet,

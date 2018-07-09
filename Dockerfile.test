@@ -22,7 +22,7 @@ ADD https://raw.githubusercontent.com/turtlecoin/checkpoints/master/checkpoints.
 # In a multi-node testnet, we'll want to have the slave nodes "wait" for the master node to wake up, so let's get ready
 ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /tmp/
 
-ARG TURTLECOIN_VERSION=v0.4.3
+ARG TURTLECOIN_VERSION=v0.6.0
 ENV TURTLECOIN_VERSION=${TURTLECOIN_VERSION}
 
 # install build dependencies
@@ -59,11 +59,11 @@ RUN apt-get update && \
     mkdir -p /usr/local/bin && \
     cp src/TurtleCoind /usr/local/bin/TurtleCoind && \
     cp src/walletd /usr/local/bin/walletd && \
-    cp src/simplewallet /usr/local/bin/simplewallet && \
+    cp src/zedwallet /usr/local/bin/zedwallet && \
     cp src/miner /usr/local/bin/miner && \
     strip /usr/local/bin/TurtleCoind && \
     strip /usr/local/bin/walletd && \
-    strip /usr/local/bin/simplewallet && \
+    strip /usr/local/bin/zedwallet && \
     strip /usr/local/bin/miner && \
     cd / && \
     rm -rf /src/turtlecoin && \

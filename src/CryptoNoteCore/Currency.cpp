@@ -1,19 +1,8 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-//
-// This file is part of Bytecoin.
-//
-// Bytecoin is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Bytecoin is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2018, The TurtleCoin Developers
+// 
+// Please see the included LICENSE file for more information.
 
 #include "Currency.h"
 #include <cctype>
@@ -148,8 +137,14 @@ size_t Currency::difficultyCutByBlockVersion(uint8_t blockMajorVersion) const {
   }
 }
 
-size_t Currency::difficultyBlocksCountByBlockVersion(uint8_t blockMajorVersion) const {
-  return difficultyWindowByBlockVersion(blockMajorVersion) + difficultyLagByBlockVersion(blockMajorVersion);
+size_t Currency::difficultyBlocksCountByBlockVersion(uint8_t blockMajorVersion, uint32_t height) const
+{
+    if (height >= CryptoNote::parameters::LWMA_2_DIFFICULTY_BLOCK_INDEX)
+    {
+        return CryptoNote::parameters::DIFFICULTY_BLOCKS_COUNT_V3;
+    }
+
+    return difficultyWindowByBlockVersion(blockMajorVersion) + difficultyLagByBlockVersion(blockMajorVersion);
 }
 
 size_t Currency::blockGrantedFullRewardZoneByBlockVersion(uint8_t blockMajorVersion) const {
@@ -235,7 +230,7 @@ bool Currency::constructMinerTx(uint8_t blockMajorVersion, uint32_t height, size
   }
 
   std::vector<uint64_t> outAmounts;
-  decompose_amount_into_digits(blockReward, m_defaultDustThreshold,
+  decompose_amount_into_digits(blockReward, defaultDustThreshold(height),
     [&outAmounts](uint64_t a_chunk) { outAmounts.push_back(a_chunk); },
     [&outAmounts](uint64_t a_dust) { outAmounts.push_back(a_dust); });
 
@@ -290,7 +285,7 @@ bool Currency::constructMinerTx(uint8_t blockMajorVersion, uint32_t height, size
   return true;
 }
 
-bool Currency::isFusionTransaction(const std::vector<uint64_t>& inputsAmounts, const std::vector<uint64_t>& outputsAmounts, size_t size) const {
+bool Currency::isFusionTransaction(const std::vector<uint64_t>& inputsAmounts, const std::vector<uint64_t>& outputsAmounts, size_t size, uint32_t height) const {
   if (size > fusionTxMaxSize()) {
     return false;
   }
@@ -305,7 +300,7 @@ bool Currency::isFusionTransaction(const std::vector<uint64_t>& inputsAmounts, c
 
   uint64_t inputAmount = 0;
   for (auto amount: inputsAmounts) {
-    if (amount < defaultDustThreshold()) {
+    if (amount < defaultDustThreshold(height)) {
       return false;
     }
 
@@ -314,13 +309,13 @@ bool Currency::isFusionTransaction(const std::vector<uint64_t>& inputsAmounts, c
 
   std::vector<uint64_t> expectedOutputsAmounts;
   expectedOutputsAmounts.reserve(outputsAmounts.size());
-  decomposeAmount(inputAmount, defaultDustThreshold(), expectedOutputsAmounts);
+  decomposeAmount(inputAmount, defaultDustThreshold(height), expectedOutputsAmounts);
   std::sort(expectedOutputsAmounts.begin(), expectedOutputsAmounts.end());
 
   return expectedOutputsAmounts == outputsAmounts;
 }
 
-bool Currency::isFusionTransaction(const Transaction& transaction, size_t size) const {
+bool Currency::isFusionTransaction(const Transaction& transaction, size_t size, uint32_t height) const {
   assert(getObjectBinarySize(transaction) == size);
 
   std::vector<uint64_t> outputsAmounts;
@@ -329,24 +324,24 @@ bool Currency::isFusionTransaction(const Transaction& transaction, size_t size) 
     outputsAmounts.push_back(output.amount);
   }
 
-  return isFusionTransaction(getInputsAmounts(transaction), outputsAmounts, size);
+  return isFusionTransaction(getInputsAmounts(transaction), outputsAmounts, size, height);
 }
 
-bool Currency::isFusionTransaction(const Transaction& transaction) const {
-  return isFusionTransaction(transaction, getObjectBinarySize(transaction));
+bool Currency::isFusionTransaction(const Transaction& transaction, uint32_t height) const {
+  return isFusionTransaction(transaction, getObjectBinarySize(transaction), height);
 }
 
-bool Currency::isAmountApplicableInFusionTransactionInput(uint64_t amount, uint64_t threshold) const {
+bool Currency::isAmountApplicableInFusionTransactionInput(uint64_t amount, uint64_t threshold, uint32_t height) const {
   uint8_t ignore;
-  return isAmountApplicableInFusionTransactionInput(amount, threshold, ignore);
+  return isAmountApplicableInFusionTransactionInput(amount, threshold, ignore, height);
 }
 
-bool Currency::isAmountApplicableInFusionTransactionInput(uint64_t amount, uint64_t threshold, uint8_t& amountPowerOfTen) const {
+bool Currency::isAmountApplicableInFusionTransactionInput(uint64_t amount, uint64_t threshold, uint8_t& amountPowerOfTen, uint32_t height) const {
   if (amount >= threshold) {
     return false;
   }
 
-  if (amount < defaultDustThreshold()) {
+  if (amount < defaultDustThreshold(height)) {
     return false;
   }
 
@@ -433,6 +428,57 @@ bool Currency::parseAmount(const std::string& str, uint64_t& amount) const {
   }
 
   return Common::fromString(strAmount, amount);
+}
+
+Difficulty Currency::getNextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const
+{
+    if (blockIndex < CryptoNote::parameters::LWMA_2_DIFFICULTY_BLOCK_INDEX)
+    {
+        return nextDifficulty(version, blockIndex, timestamps, cumulativeDifficulties);
+    }
+
+    return nextDifficultyV3(timestamps, cumulativeDifficulties);
+}
+
+// LWMA-2 difficulty algorithm 
+// Copyright (c) 2017-2018 Zawy, MIT License
+// https://github.com/zawy12/difficulty-algorithms/issues/3
+Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const
+{
+    int64_t T = CryptoNote::parameters::DIFFICULTY_TARGET;
+    int64_t N = CryptoNote::parameters::DIFFICULTY_WINDOW_V3;
+    int64_t FTL = CryptoNote::parameters::CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V3;
+    int64_t L(0), ST, sum_3_ST(0), next_D, prev_D;
+
+    if (timestamps.size() <= static_cast<uint64_t>(N))
+    {
+        return 1000;
+    }
+
+    for (int64_t i = 1; i <= N; i++)
+    {  
+        ST = std::max(-FTL, std::min(static_cast<int64_t>(timestamps[i]) - static_cast<int64_t>(timestamps[i-1]), 6 * T));
+
+        L +=  ST * i; 
+
+        if (i > N-3)
+        {
+            sum_3_ST += ST;
+        } 
+    }
+
+    next_D = (static_cast<int64_t>(cumulativeDifficulties[N] - cumulativeDifficulties[0]) * T * (N+1) * 99) / (100 * 2 * L);
+    prev_D = cumulativeDifficulties[N] - cumulativeDifficulties[N-1];
+
+    /* Make sure we don't divide by zero if 50x attacker (thanks fireice) */
+    next_D = std::max((prev_D*70)/100, std::min(next_D, (prev_D*107)/100));
+
+    if (sum_3_ST < (8 * T) / 10)
+    {  
+        next_D = (prev_D * 110) / 100;
+    }
+
+    return static_cast<uint64_t>(next_D);
 }
 
 Difficulty Currency::nextDifficulty(std::vector<uint64_t> timestamps,
