@@ -147,9 +147,6 @@ const uint64_t FORK_HEIGHTS[] =
     1400000  // 7
 };
 
-/* MAKE SURE TO UPDATE THIS VALUE WITH EVERY MAJOR RELEASE BEFORE A FORK */
-const uint64_t SOFTWARE_SUPPORTED_FORK_INDEX                 = 4;
-
 const uint64_t FORK_HEIGHTS_SIZE = sizeof(FORK_HEIGHTS) / sizeof(*FORK_HEIGHTS);
 
 /* The index in the FORK_HEIGHTS array that this version of the software will
@@ -171,7 +168,10 @@ const char     P2P_NET_DATA_FILENAME[]                       = "p2pstate.bin";
 const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json";
 } // parameters
 
-const char     CRYPTONOTE_NAME[]                             = "TurtleCoin";
+// give your testnet a name, impacts the the data dir name so avoid existing testnets and mainnet
+// mainnet: TurtleCoin
+// vico-7xT: Vico
+const char     CRYPTONOTE_NAME[]                             = "";
 
 const uint8_t  TRANSACTION_VERSION_1                         =  1;
 const uint8_t  TRANSACTION_VERSION_2                         =  2;
@@ -205,15 +205,21 @@ const uint64_t P2P_DEFAULT_INVOKE_TIMEOUT                    = 60 * 2 * 1000; //
 const size_t   P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT          = 5000;          // 5 seconds
 const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 
+
+// Put in some new vals for the first three bytes
+// mainnet:  0xb5, 0x0c, 0x4a < so don't use these values
+// testnet-main-clone: 0x22, 0x4c, 0x2f < don't use these either
+// testnet-dev-clone: 0x33, 0x5c, 0x3f < don't use these either
+// testnet-dev-zero: 0x44, 0x6c, 0x4f < don't use these either
+// your-testnet: vals here and PR please ;)
 const static boost::uuids::uuid CRYPTONOTE_NETWORK =
 {
-    {  0xb5, 0x0c, 0x4a, 0x6c, 0xcf, 0x52, 0x57, 0x41, 0x65, 0xf9, 0x91, 0xa4, 0xb6, 0xc1, 0x43, 0xe9  }
+    {  0x??, 0x??, 0x??, 0x6c, 0xcf, 0x52, 0x57, 0x41, 0x65, 0xf9, 0x91, 0xa4, 0xb6, 0xc1, 0x43, 0xe9  }
 };
 
+// You'll need seed nodes put some in here
 const char* const SEED_NODES[] = {
-  "206.189.142.142:11897",//rock
-  "145.239.88.119:11999", //cision
-  "142.44.242.106:11897", //tom
-  "165.227.252.132:11897" //iburnmycd
+  //"ip:port", < it's an array so figure out the comma
 };
+
 } // CryptoNote
