@@ -29,20 +29,26 @@ Note that there are missing parameters that need to be filled in, this is on pur
 Check readme on each Testnet for additional information.  
 Send in PRs to update the list
 
+-[testnet-cn_soft_shell](https://github.com/brandonlehmann/turtlecoin/tree/testnet)
+  * **status:** active and running
+  * New mining algorithm inspired by cn_adaptive with interesting dynamics.
 - [testnet-main-clone](https://github.com/turtlecoin/testnet/tree/testnet-main-clone)
+  * **status:** being deployed
   * from turtlecoin/turtlecoin master branch
   * blockchain is a clone of mainnet from block 650,000 _(target)_
   * Web Wallets will be tested here _(as testnet is down, so are the wallets)_
     - [Canti Web Wallet](https://canti.turtlecoin.ws/redeem.php?key=wVishaQguTRTL70Mem5rLOTasdTOblnY8JBjTRTLtk4mE3sLOTafTO2QNfhkwVnpDrgu6sFcTRTLhkbt8ZjLOTasdadTOqJRWzl7Yl) - [Discord](https://discord.gg/FBzS7J6)
     - [TurtleWallet.io](https://beta.turtlewallet.io/) - [Discord](https://discord.gg/Z4utZ7x)
 - [testnet-dev-clone](https://github.com/turtlecoin/testnet/tree/testnet-main-clone)
+  * **status:** being deployed
   * from turtlecoin/turtlecoin development branch
   * blockchain is a clone of mainnet from block 650,000 _(target)_
 - [testnet-dev-zero](https://github.com/turtlecoin/testnet/tree/testnet-dev-zero)
+  * **status:** being deployed
   * from turtlecoin/turtlecoin development branch
   * blockchain starts from zero
 
-  
+
 ## 3x Permanent Testnets
 
 We've talked about this a few times in #dev_general on [Discord](http://chat.turtlecoin.lol). Things come up and there isn't really anyway to effectively verify & check things out before going live. Thus the idea was raised to launch 3x permanent testnets.
