@@ -255,9 +255,16 @@ const uint16_t DATABASE_DEFAULT_BACKGROUND_THREADS_COUNT     = 2;
 
 const char     LATEST_VERSION_URL[]                          = "http://latest.turtlecoin.lol";
 const std::string LICENSE_URL                                = "https://github.com/turtlecoin/turtlecoin/blob/master/LICENSE";
-const static   boost::uuids::uuid CRYPTONOTE_NETWORK         =
+
+// Put in some new vals for the first three bytes
+// mainnet:  0xb5, 0x0c, 0x4a < so don't use these values
+// testnet-main-clone: 0x22, 0x4c, 0x2f < don't use these either
+// testnet-dev-clone: 0x33, 0x5c, 0x3f < don't use these either
+// testnet-dev-zero: 0x44, 0x6c, 0x4f < don't use these either
+// your-testnet: vals here and PR please ;)
+const static boost::uuids::uuid CRYPTONOTE_NETWORK =
 {
-    {  0xb5, 0x0c, 0x4a, 0x6c, 0xcf, 0x52, 0x57, 0x41, 0x65, 0xf9, 0x91, 0xa4, 0xb6, 0xc1, 0x43, 0xe9  }
+    {  0x??, 0x??, 0x??, 0x6c, 0xcf, 0x52, 0x57, 0x41, 0x65, 0xf9, 0x91, 0xa4, 0xb6, 0xc1, 0x43, 0xe9  }
 };
 
 // You'll need seed nodes put some in here
