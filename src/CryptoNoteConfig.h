@@ -216,7 +216,6 @@ const static boost::uuids::uuid CRYPTONOTE_NETWORK =
     {  0xb5, 0x0c, 0x4a, 0x6c, 0xcf, 0x52, 0x57, 0x41, 0x65, 0xf9, 0x91, 0xa4, 0xb6, 0xc1, 0x43, 0xe9  }
 };
 
-
 // You'll need seed nodes put some in here
 const char* const SEED_NODES[] = {
   //"ip:port", < it's an array so figure out the comma
