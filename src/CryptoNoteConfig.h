@@ -136,14 +136,14 @@ static_assert(UPGRADE_VOTING_WINDOW > 1, "Bad UPGRADE_VOTING_WINDOW");
 /* Block heights we are going to have hard forks at */
 const uint64_t FORK_HEIGHTS[] =
 {
-    187000,
-    350000,
-    440000,
-    620000,
-    700000,
-    1000000,
-    1200000,
-    1400000
+    187000,  // 0
+    350000,  // 1
+    440000,  // 2
+    620000,  // 3
+    700000,  // 4
+    1000000, // 5
+    1200000, // 6
+    1400000  // 7
 };
 
 const uint64_t FORK_HEIGHTS_SIZE = sizeof(FORK_HEIGHTS) / sizeof(*FORK_HEIGHTS);
@@ -205,7 +205,7 @@ const size_t   P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT          = 5000;          //
 const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 
 
-// uncomnment below and put in some new vals for the first three bytes
+// Put in some new vals for the first three bytes
 // mainnet:  0xb5, 0x0c, 0x4a < so don't use these values
 // testnet-main-clone: 0x22, 0x4c, 0x2f < don't use these either
 // testnet-dev-clone: 0x33, 0x5c, 0x3f < don't use these either
@@ -213,7 +213,7 @@ const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 // your-testnet: vals here and PR please ;)
 const static boost::uuids::uuid CRYPTONOTE_NETWORK =
 {
-    {  0xb5, 0x0c, 0x4a, 0x6c, 0xcf, 0x52, 0x57, 0x41, 0x65, 0xf9, 0x91, 0xa4, 0xb6, 0xc1, 0x43, 0xe9  }
+    {  0x??, 0x??, 0x??, 0x6c, 0xcf, 0x52, 0x57, 0x41, 0x65, 0xf9, 0x91, 0xa4, 0xb6, 0xc1, 0x43, 0xe9  }
 };
 
 // You'll need seed nodes put some in here
