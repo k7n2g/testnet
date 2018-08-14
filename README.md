@@ -29,7 +29,7 @@ Note that there are missing parameters that need to be filled in, this is on pur
 Check readme on each Testnet for additional information.  
 Send in PRs to update the list
 
--[testnet-cn_soft_shell](https://github.com/brandonlehmann/turtlecoin/tree/testnet)
+- [testnet-cn_soft_shell](https://github.com/brandonlehmann/turtlecoin/tree/testnet)
   * **status:** active and running
   * New mining algorithm inspired by cn_adaptive with interesting dynamics.
 - [testnet-main-clone](https://github.com/turtlecoin/testnet/tree/testnet-main-clone)
