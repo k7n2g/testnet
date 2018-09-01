@@ -3,7 +3,9 @@
 This repo is for setting up testnets. Dedicated testnets let us fully test various changes that the --testnet flag doesn't let us test.
 
 Each branch of this repo is a testnet, on each branch the README.md should explain what it is about.  
-This master/development branches will be kept in sync with upstream master turtlecoin/turtlecoin and testnets can be created from master or development:
+
+These master/development branches will be kept in sync with upstream master turtlecoin/turtlecoin and testnets can be created from master or development:
+
 
 ```
 git clone https://github.com/turtlecoin/testnet.git
@@ -77,22 +79,6 @@ This is what is required of a seed node operator
 
 If you are able to assist by running a seed node please ping SoreGums#8071 in #dev_general on the TurtleCoin [Discord](http://chat.turtlecoin.lol). You can absolutely participate if you have never done anything like this before! TurtleCoin is also all about the Education of how Blockchain technology works. If you have capability to run something 24/7 for an extended period of time, jump in.
 
-## Testnets Being Deployed
-
-Check readme on each Testnet for additional information.
-
-- [testnet-main-clone](https://github.com/turtlecoin/testnet/tree/testnet-main-clone)
-  * from turtlecoin/turtlecoin master branch
-  * blockchain is a clone of mainnet from block 650,000 _(target)_
-  * Web Wallets will be tested here _(as testnet is down, so are the wallets)_
-    - [Canti Web Wallet](https://canti.turtlecoin.ws/redeem.php?key=wVishaQguTRTL70Mem5rLOTasdTOblnY8JBjTRTLtk4mE3sLOTafTO2QNfhkwVnpDrgu6sFcTRTLhkbt8ZjLOTasdadTOqJRWzl7Yl) - [Discord](https://discord.gg/FBzS7J6)
-    - [TurtleWallet.io](https://beta.turtlewallet.io/) - [Discord](https://discord.gg/Z4utZ7x)
-- [testnet-dev-clone](https://github.com/turtlecoin/testnet/tree/testnet-main-clone)
-  * from turtlecoin/turtlecoin development branch
-  * blockchain is a clone of mainnet from block 650,000 _(target)_
-- [testnet-dev-zero](https://github.com/turtlecoin/testnet/tree/testnet-dev-zero)
-  * from turtlecoin/turtlecoin development branch
-  * blockchain starts from zero
 
 ## Previous Testnets
 
