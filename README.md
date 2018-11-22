@@ -1,194 +1,87 @@
-![image](https://user-images.githubusercontent.com/34389545/35821974-62e0e25c-0a70-11e8-87dd-2cfffeb6ed47.png)
+![TESTNET In Operation](https://user-images.githubusercontent.com/317/40411678-465103e0-5e9b-11e8-8ac0-84538920aabe.png)
 
-#### Master Build Status
-[![Build Status](https://travis-ci.org/turtlecoin/turtlecoin.svg?branch=master)](https://travis-ci.org/turtlecoin/turtlecoin) [![Build status](https://ci.appveyor.com/api/projects/status/github/turtlecoin/turtlecoin?branch=master&svg=true)](https://ci.appveyor.com/project/RocksteadyTC/turtlecoin)
+This repo is for setting up testnets. Dedicated testnets let us fully test various changes that the --testnet flag doesn't let us test.
 
-#### Development Build Status
-[![Build Status](https://travis-ci.org/turtlecoin/turtlecoin.svg?branch=development)](https://travis-ci.org/turtlecoin/turtlecoin) [![Build status](https://ci.appveyor.com/api/projects/status/github/turtlecoin/turtlecoin?branch=development&svg=true)](https://ci.appveyor.com/project/RocksteadyTC/turtlecoin)
+Each branch of this repo is a testnet, on each branch the README.md should explain what it is about.  
 
-### Installing
+These master/development branches will be kept in sync with upstream master turtlecoin/turtlecoin and testnets can be created from master or development:
 
-We offer binary images of the latest releases here: https://latest.turtlecoin.lol
-
-If you would like to compile yourself, read on.
-
-### How To Compile
-
-#### Linux
-
-##### Prerequisites
-
-You will need the following packages: boost, cmake (3.8 or higher), make, and git.
-
-You will also need either GCC/G++, or Clang.
-
-If you are using GCC, you will need GCC-6.0 or higher.
-
-If you are using Clang, you will need Clang 5.0 or higher. You will also need libstdc++\-6.0 or higher.
-
-##### GCC setup, on Ubuntu
-
-- `sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y`
-- `sudo apt-get update`
-- `sudo apt-get install aptitude -y`
-- `sudo aptitude install -y build-essential g++-8 gcc-8 git libboost-all-dev python-pip`
-- `sudo pip install cmake`
-- `export CC=gcc-8`
-- `export CXX=g++-8`
-- `git clone -b master --single-branch https://github.com/turtlecoin/turtlecoin`
-- `cd turtlecoin`
-- `mkdir build`
-- `cd build`
-- `cmake ..`
-- `make`
-
-The binaries will be in the `src` folder when you are complete.
-
-- `cd src`
-- `./TurtleCoind --version`
-
-##### Clang setup, on Ubuntu
-
-- `sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y`
-- `wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -`
-
-You need to modify the below command for your version of ubuntu - see https://apt.llvm.org/
-
-* Ubuntu 14.04 (Trusty)
-- `sudo add-apt-repository "deb https://apt.llvm.org/trusty/ llvm-toolchain-trusty 6.0 main"`
-
-* Ubuntu 16.04 (Xenial)
-- `sudo add-apt-repository "deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial 6.0 main"`
-
-* Ubuntu 18.04 (Bionic)
-- `sudo add-apt-repository "deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic 6.0 main"`
-
-- `sudo apt-get update`
-- `sudo apt-get install aptitude -y`
-- `sudo aptitude install -y -o Aptitude::ProblemResolver::SolutionCost='100*canceled-actions,200*removals' build-essential clang-6.0 libstdc++-7-dev git libboost-all-dev python-pip`
-- `sudo pip install cmake`
-- `export CC=clang-6.0`
-- `export CXX=clang++-6.0`
-- `git clone -b master --single-branch https://github.com/turtlecoin/turtlecoin`
-- `cd turtlecoin`
-- `mkdir build`
-- `cd build`
-- `cmake ..`
-- `make`
-
-The binaries will be in the `src` folder when you are complete.
-
-- `cd src`
-- `./TurtleCoind --version`
-
-##### Generic Linux
-
-Ensure you have the dependencies listed above.
-
-If you want to use clang, ensure you set the environment variables `CC` and `CXX`.
-See the ubuntu instructions for an example.
-
-- `git clone -b master --single-branch https://github.com/turtlecoin/turtlecoin`
-- `cd turtlecoin`
-- `mkdir build`
-- `cd build`
-- `cmake ..`
-- `make`
-
-The binaries will be in the `src` folder when you are complete.
-
-- `cd src`
-- `./TurtleCoind --version`
-
-#### Apple
-
-##### Prerequisites
-
-- Install [cmake](https://cmake.org/). See [here](https://stackoverflow.com/questions/23849962/cmake-installer-for-mac-fails-to-create-usr-bin-symlinks) if you are unable to call `cmake` from the terminal after installing.
-- Install the [boost](http://www.boost.org/) libraries. Either compile boost manually or run `brew install boost`.
-- Install XCode and Developer Tools.
-
-
-##### Building
-
-- `git clone -b master --single-branch https://github.com/turtlecoin/turtlecoin`
-- `cd turtlecoin`
-- `mkdir build && cd $_`
-- `cmake ..` or `cmake -DBOOST_ROOT=<path_to_boost_install> ..` when building
-  from a specific boost install. If you used brew to install boost, your path is most likely `/usr/local/include/boost.`
-- `make`
-
-The binaries will be in the `src` folder when you are complete.
-
-- `cd src`
-- `./TurtleCoind --version`
-
-If your version of gcc is too old, you may need to run:
-
-- `brew install gcc@8`
-- `export CC=gcc-8`
-- `export CXX=g++-8`
-
-#### Windows
-
-##### Prerequisites
-
-- Install [Visual Studio 2017 Community Edition](https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=15&page=inlineinstall)
-- When installing Visual Studio, it is **required** that you install **Desktop development with C++**
-- Install the latest version of [Boost](https://sourceforge.net/projects/boost/files/boost-binaries/1.68.0/boost_1_68_0-msvc-14.1-64.exe/download) - Currently Boost 1.68.
-
-##### Building
-
-- From the start menu, open 'x64 Native Tools Command Prompt for vs2017'.
-- `cd <your_turtlecoin_directory>`
-- `mkdir build`
-- `cd build`
-- `set PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin";%PATH%`
-- `cmake -G "Visual Studio 15 2017 Win64" .. -DBOOST_ROOT=C:/local/boost_1_68_0` (Or your boost installed dir.)
-- `MSBuild TurtleCoin.sln /p:Configuration=Release /m`
-
-The binaries will be in the `src/Release` folder when you are complete.
-
-- `cd src`
-- `cd Release`
-- `TurtleCoind.exe --version`
-
-#### Raspberry Pi 3 B+
-The following images are known to work. Your operation system image **MUST** be 64 bit.
-
-##### Known working images
-
-- https://github.com/Crazyhead90/pi64/releases
-- https://fedoraproject.org/wiki/Architectures/ARM/Raspberry_Pi#aarch64_supported_images_for_Raspberry_Pi_3
-- https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-3
-
-Once you have a 64 bit image installed, setup proceeds the same as any Linux distribution. Ensure you have at least 2GB of ram, or the build is likely to fail. You may need to setup swap space.
-
-##### Building
-
-- `git clone -b master --single-branch https://github.com/turtlecoin/turtlecoin`
-- `cd turtlecoin`
-- `mkdir build`
-- `cd build`
-- `cmake ..`
-- `make`
-
-The binaries will be in the `src` folder when you are complete.
-
-- `cd src`
-- `./TurtleCoind --version`
-
-#### Thanks
-Cryptonote Developers, Bytecoin Developers, Monero Developers, Forknote Project, TurtleCoin Community
-
-### Copypasta for license when editing files
-
-Hi TurtleCoin contributor, thanks for forking and sending back Pull Requests. Extensive docs about contributing are in the works or elsewhere. For now this is the bit we need to get into all the files we touch. Please add it to the top of the files, see [src/CryptoNoteConfig.h](https://github.com/turtlecoin/turtlecoin/commit/28cfef2575f2d767f6e512f2a4017adbf44e610e) for an example.
 
 ```
-// Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2014-2018, The Monero Project
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
-// Please see the included LICENSE file for more information.
+git clone https://github.com/turtlecoin/testnet.git
+
+# if tracking master
+git checkout -b new-testnet
+
+# if tracking development
+git checkout development
+git checkout -b new-testnet
 ```
+
+Master branch tracks released code.  
+Development branch tracks code in development/testing.
+
+Note that there are missing parameters that need to be filled in, this is on purpose to avoid accidentally joining the testnet to mainnet.
+
+
+## Testnets Being Deployed/Active
+
+Check readme on each Testnet for additional information.  
+Send in PRs to update the list
+
+- [testnet-cn_soft_shell](https://github.com/brandonlehmann/turtlecoin/tree/testnet)
+  * **status:** active and running
+  * New mining algorithm inspired by cn_adaptive with interesting dynamics.
+- [testnet-main-clone](https://github.com/turtlecoin/testnet/tree/testnet-main-clone)
+  * **status:** being deployed
+  * from turtlecoin/turtlecoin master branch
+  * blockchain is a clone of mainnet from block 650,000 _(target)_
+  * Web Wallets will be tested here _(as testnet is down, so are the wallets)_
+    - [Canti Web Wallet](https://canti.turtlecoin.ws/redeem.php?key=wVishaQguTRTL70Mem5rLOTasdTOblnY8JBjTRTLtk4mE3sLOTafTO2QNfhkwVnpDrgu6sFcTRTLhkbt8ZjLOTasdadTOqJRWzl7Yl) - [Discord](https://discord.gg/FBzS7J6)
+    - [TurtleWallet.io](https://beta.turtlewallet.io/) - [Discord](https://discord.gg/Z4utZ7x)
+- [testnet-dev-clone](https://github.com/turtlecoin/testnet/tree/testnet-main-clone)
+  * **status:** being deployed
+  * from turtlecoin/turtlecoin development branch
+  * blockchain is a clone of mainnet from block 650,000 _(target)_
+- [testnet-dev-zero](https://github.com/turtlecoin/testnet/tree/testnet-dev-zero)
+  * **status:** being deployed
+  * from turtlecoin/turtlecoin development branch
+  * blockchain starts from zero
+
+
+## 3x Permanent Testnets
+
+We've talked about this a few times in #dev_general on [Discord](http://chat.turtlecoin.lol). Things come up and there isn't really anyway to effectively verify & check things out before going live. Thus the idea was raised to launch 3x permanent testnets.
+
+- TestnetMainClone
+- TestnetDevClone
+- TestnetDevZero
+
+So these 3x testnets are being setup and deployed, can monitor this testnet repo for activity.
+
+## Call for Testnet Seed Nodes
+
+These testnets require seed nodes to be running and kept up to date. SoreGums has launched the required minimum of 3x nodes for each one. However if anything happens to the host/server these are all on, the testnets will stop working and possibly require being reset - start again. Running a seed node won't get you anything, it is purely for the lulz and for the benefit of the community.
+
+Here is what makes a seed node a seed node
+
+- listed in the config as a seed node
+- node is available/connectable 24/7
+ 
+This is what is required of a seed node operator
+
+- ensure daemon is available/connectable 24/7 and respond swiftly when/if there are issues 
+- update daemons as things are updated
+- run a 1 thread solo miner 24/7
+- expose the daemon's RPC API port either to the public _(not ideal)_ or only to SoreGums dedicated IP for the seed nodes stat page
+- able to be in [Discord](http://chat.turtlecoin.lol) to be notified when things are updated
+  * #dev_general is where testnet info is discussed
+
+If you are able to assist by running a seed node please ping SoreGums#8071 in #dev_general on the TurtleCoin [Discord](http://chat.turtlecoin.lol). You can absolutely participate if you have never done anything like this before! TurtleCoin is also all about the Education of how Blockchain technology works. If you have capability to run something 24/7 for an extended period of time, jump in.
+
+
+## Previous Testnets
+
+- [lwma-2](https://github.com/turtlecoin/testnet/tree/lwma-2)
+- [vico-7xT](https://github.com/turtlecoin/testnet/tree/vico-7xT)
+- [main-clone](https://github.com/turtlecoin/testnet/tree/main-clone)
