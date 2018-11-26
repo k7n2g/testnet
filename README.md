@@ -1,6 +1,16 @@
-![TESTNET In Operation](https://user-images.githubusercontent.com/317/40411678-465103e0-5e9b-11e8-8ac0-84538920aabe.png)
+# Turtlecoin Testnet
 
-This repo is for setting up testnets. Dedicated testnets let us fully test various changes that the --testnet flag doesn't let us test.
+This repo is for setting up Turtlecoin testnets. Dedicated testnets let us fully test various changes that the `--testnet` flag doesn't let us test.
+
+
+![Network](https://github.com/KosnIre/turtlecoin-testnet/blob/patch/status_badge_samples/images/status_badges/network-online.png)
+![| Hashrate](https://github.com/KosnIre/turtlecoin-testnet/blob/patch/status_badge_samples/images/status_badges/hashrate.png)
+![| Block Height](https://github.com/KosnIre/turtlecoin-testnet/blob/patch/status_badge_samples/images/status_badges/block_height.png)
+![| Last Block](https://github.com/KosnIre/turtlecoin-testnet/blob/patch/status_badge_samples/images/status_badges/last_block.png)
+![| Block Explorer](https://github.com/KosnIre/turtlecoin-testnet/blob/patch/status_badge_samples/images/status_badges/block_explorer.png)
+![| Web Wallet](https://github.com/KosnIre/turtlecoin-testnet/blob/patch/status_badge_samples/images/status_badges/web_wallet.png)
+
+<img src="https://user-images.githubusercontent.com/317/40411678-465103e0-5e9b-11e8-8ac0-84538920aabe.png" width="50%" alt="TESTNET In Operation" />
 
 Each branch of this repo is a testnet, on each branch the README.md should explain what it is about.  
 
