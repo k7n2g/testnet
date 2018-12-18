@@ -433,6 +433,14 @@ uint64_t Currency::getNextDifficulty(uint8_t version, uint32_t blockIndex, std::
     {
         return nextDifficultyV6(timestamps, cumulativeDifficulties);
     }
+    else if (blockIndex >= CryptoNote::parameters::TESTNET_DIFF_RESET_LMWMA_2_V3_BLOCK_INDEX)
+    {
+        return nextDifficultyV5(timestamps, cumulativeDifficulties);
+    }
+    else if (blockIndex >= CryptoNote::parameters::TESTNET_DIFF_EASYMODE_BLOCK_INDEX)
+    {
+        return 888;
+    }
     else if (blockIndex >= CryptoNote::parameters::LWMA_2_DIFFICULTY_BLOCK_INDEX_V3)
     {
         return nextDifficultyV5(timestamps, cumulativeDifficulties);

@@ -40,6 +40,9 @@ const uint64_t LWMA_2_DIFFICULTY_BLOCK_INDEX                 = 620000;
 const uint64_t LWMA_2_DIFFICULTY_BLOCK_INDEX_V2              = 700000;
 const uint64_t LWMA_2_DIFFICULTY_BLOCK_INDEX_V3              = 800000;
 
+const uint64_t TESTNET_DIFF_EASYMODE_BLOCK_INDEX             = 1094500;
+const uint64_t TESTNET_DIFF_RESET_LMWMA_2_V3_BLOCK_INDEX     = 1095500;
+
 const uint64_t LWMA_3_DIFFICULTY_BLOCK_INDEX                 = 2000000;
 
 const unsigned EMISSION_SPEED_FACTOR                         = 25;
@@ -151,7 +154,7 @@ const uint32_t KEY_IMAGE_CHECKING_BLOCK_INDEX                = 0;
 const uint32_t UPGRADE_HEIGHT_V2                             = 1;
 const uint32_t UPGRADE_HEIGHT_V3                             = 2;
 const uint32_t UPGRADE_HEIGHT_V4                             = 350000; // Upgrade height for CN-Lite Variant 1 switch.
-const uint32_t UPGRADE_HEIGHT_V5                             = 1200000; // Upgrade height for CN-Turtle Variant 2 switch.
+const uint32_t UPGRADE_HEIGHT_V5                             = 1097000; // Upgrade height for CN-Turtle Variant 2 switch.
 const uint32_t UPGRADE_HEIGHT_CURRENT                        = UPGRADE_HEIGHT_V5;
 
 const unsigned UPGRADE_VOTING_THRESHOLD                      = 90;               // percent
@@ -170,15 +173,15 @@ const uint64_t FORK_HEIGHTS[] =
     700000,  // 4
     800000,  // 5
     1000000, // 6
-    1200000, // 7
-    1400000, // 8
+    1094500, // 7
+    1097000, // 8
     1600000, // 9
     1800000, // 10
     2000000, // 11
 };
 
 /* MAKE SURE TO UPDATE THIS VALUE WITH EVERY MAJOR RELEASE BEFORE A FORK */
-const uint64_t SOFTWARE_SUPPORTED_FORK_INDEX                 = 7;
+const uint64_t SOFTWARE_SUPPORTED_FORK_INDEX                 = 8;
 
 const uint64_t FORK_HEIGHTS_SIZE = sizeof(FORK_HEIGHTS) / sizeof(*FORK_HEIGHTS);
 
@@ -197,11 +200,11 @@ static_assert(FORK_HEIGHTS_SIZE == 0 || CURRENT_FORK_INDEX < FORK_HEIGHTS_SIZE, 
 const char     CRYPTONOTE_BLOCKS_FILENAME[]                  = "blocks.bin";
 const char     CRYPTONOTE_BLOCKINDEXES_FILENAME[]            = "blockindexes.bin";
 const char     CRYPTONOTE_POOLDATA_FILENAME[]                = "poolstate.bin";
-const char     P2P_NET_DATA_FILENAME[]                       = "p2pstate.bin";
+const char     P2P_NET_DATA_FILENAME[]                       = "p2pcntrtl.bin";
 const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json";
 } // parameters
 
-const char     CRYPTONOTE_NAME[]                             = "TurtleCoin";
+const char     CRYPTONOTE_NAME[]                             = "CNTRTL-v2";
 
 const uint8_t  TRANSACTION_VERSION_1                         =  1;
 const uint8_t  TRANSACTION_VERSION_2                         =  2;
@@ -229,8 +232,8 @@ const size_t   P2P_LOCAL_GRAY_PEERLIST_LIMIT                 =  5000;
 
 // P2P Network Configuration Section - This defines our current P2P network version
 // and the minimum version for communication between nodes
-const uint8_t  P2P_CURRENT_VERSION                           = 4;
-const uint8_t  P2P_MINIMUM_VERSION                           = 2;
+const uint8_t  P2P_CURRENT_VERSION                           = 10;
+const uint8_t  P2P_MINIMUM_VERSION                           = 10;
 
 // This defines the minimum P2P version required for lite blocks propogation
 const uint8_t P2P_LITE_BLOCKS_PROPOGATION_VERSION            = 4;
@@ -256,17 +259,16 @@ const uint64_t DATABASE_READ_BUFFER_MB_DEFAULT_SIZE          = 10;
 const uint32_t DATABASE_DEFAULT_MAX_OPEN_FILES               = 100;
 const uint16_t DATABASE_DEFAULT_BACKGROUND_THREADS_COUNT     = 2;
 
-const char     LATEST_VERSION_URL[]                          = "http://latest.turtlecoin.lol";
+const char     LATEST_VERSION_URL[]                          = "https://github.com/turtlecoin/testnet/tree/cntrtl-v2";
 const std::string LICENSE_URL                                = "https://github.com/turtlecoin/turtlecoin/blob/master/LICENSE";
 const static   boost::uuids::uuid CRYPTONOTE_NETWORK         =
 {
-    {  0xb5, 0x0c, 0x4a, 0x6c, 0xcf, 0x52, 0x57, 0x41, 0x65, 0xf9, 0x91, 0xa4, 0xb6, 0xc1, 0x43, 0xe9  }
+    {  0xa8, 0xb8, 0xc8, 0x6c, 0xcf, 0x52, 0x57, 0x41, 0x65, 0xf9, 0x91, 0xa4, 0xb6, 0xc1, 0x43, 0xe9  }
 };
 
 const char* const SEED_NODES[] = {
-  "206.189.142.142:11897",//rock
-  "145.239.88.119:11999", //cision
-  "142.44.242.106:11897", //tom
-  "165.227.252.132:11897" //iburnmycd
+  "107.189.38.102:11810", // soregums - honeyok
+  "192.138.210.22:11820", // soregums - vps8g
+  "192.138.210.22:11830" // soregums - vps8g
 };
 } // CryptoNote
